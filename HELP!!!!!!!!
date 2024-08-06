@@ -1,0 +1,30 @@
+
+
+SELECT ALL QUESTIONS BASED ON CATEGORY ID
+
+SELECT * FROM question
+JOIN category on question.cat_id = category.id where category.id=1; 
+
+
+
+SELECT ALL (QUESTION ID AND QUESTION) BASED ON CATEGORY ID
+
+SELECT question.ID as questionId, question.question FROM question
+JOIN category on question.cat_id = category.id where category.id=1;
+
+
+
+PULL OUT 5 RANDOM QUESTION BASED ON CATEGORY ID
+
+SELECT q.id AS question_id, q.question
+FROM question q
+JOIN answer a ON q.id = a.question_id
+WHERE q.cat_id = 1
+ORDER BY RANDOM()
+LIMIT 5;
+
+
+
+SELECT * FROM answer where question_id=$1
+
+

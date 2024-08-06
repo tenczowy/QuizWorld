@@ -1,0 +1,103 @@
+.question-card {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border: 1px solid #333;
+  border-radius: 10px;
+  margin: 1rem;
+  min-width: 0;
+  width: 80%;
+  max-width: 500px;
+  background-color: #1a1a1a; /* Dark background color */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7); /* Darker shadow for depth */
+  margin-bottom: 1rem;
+}
+
+.question-card__question {
+  margin-bottom: 2rem;
+  font-size: 1.5em;
+  color: #e0e0e0; /* Light gray text for question */
+}
+
+.question-card__answers {
+  list-style: none;
+  padding: 0;
+}
+
+.question-card__answer-item {
+  margin-bottom: 15px;
+}
+
+.question-card__answer-text {
+  font-size: 1.1em;
+}
+
+.question-card__next-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #ff9900;
+  color: #1a1a1a;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.question-card__next-button:hover {
+  background-color: #cc7a00;
+}
+
+.question-card__next-button:disabled {
+  background-color: #666;
+  cursor: not-allowed;
+}
+
+/* STYLE ANSWER RADIO */
+.question-card__answer-radio {
+  appearance: none;
+  -webkit-appearance: none;
+  display: none;
+}
+
+.question-card__answer-label {
+  display: inline-block;
+  width: 100%;
+  padding: 1rem 2rem;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  line-height: 1.4;
+  border: 2px solid #333;
+  cursor: pointer;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.question-card__answer-radio:checked + .question-card__answer-text {
+  border: none;
+}
+
+.question-card__answer-radio:checked + .question-card__answer-text::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 2px solid orange;
+  box-sizing: border-box;
+  z-index: 99; /* To ensure the border appears behind the text */
+}
+
+.question-card__answer-label:hover {
+  background-color: #555;
+}
+
+.question-card_result {
+  cursor: default;
+}
+
+.question-card_result:hover {
+  background-color: #333;
+}

@@ -1,0 +1,40 @@
+.primary-nav {
+  top: 0;
+  position: fixed;
+  width: 100%;
+  z-index: 999;
+}
+
+.logging-btns-container {
+  display: flex;
+  justify-content: end;
+  gap: 1rem;
+  padding: 1rem 2rem;
+}
+
+.logging-btns-container > a,
+.logout-btn {
+  background: linear-gradient(to bottom, #3a3a3a, #1c1c1c);
+  border: 2px solid #70543e;
+  border-radius: 5px;
+  color: #d4b873;
+  font-family: 'Georgia', serif;
+  font-size: 16px;
+  padding: 10px 20px;
+  text-shadow: 1px 1px 2px #000;
+  transition: all 0.3s, transform 0.3s;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.logging-btns-container > a:hover,
+.logout-btn:hover {
+  background: linear-gradient(to bottom, #4a4a4a, #2c2c2c);
+  transform: scale(1.05);
+}
+
+.logging-btns-container > a:active,
+.logout-btn:active {
+  background: linear-gradient(to bottom, #2c2c2c, #1c1c1c);
+  transform: scale(1);
+}
