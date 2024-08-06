@@ -2,10 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../public/AddQuestionForm.css';
 import AutoExpandTextarea from './AutoExpendTextArea';
-import { Navigate, useNavigate } from 'react-router-dom';
 
 function AddQuestionForm() {
-  const navigate = useNavigate();
   const [refreshKey, setRefreshKey] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [allCategories, setAllCategories] = useState([]);
@@ -57,17 +55,24 @@ function AddQuestionForm() {
 
   const handleSubmit = async (event) => {
     const userId = sessionStorage.getItem('userId');
+    const authToken = sessionStorage.getItem('authToken');
     event.preventDefault();
     if (validateForm(formValues) === false) {
       alert('All fields are required!');
     } else {
       try {
-        const res = await axios.post('http://localhost:4000/addQuestion', {
-          params: {
+        const res = await axios.post(
+          'http://localhost:4000/addQuestion',
+          {
             formData: formValues,
             userId: userId,
           },
-        });
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
         alert(res.data.result);
         setRefreshKey((oldKey) => oldKey + 1);
       } catch {

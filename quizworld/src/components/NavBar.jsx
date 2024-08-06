@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import '../public/NavBar.css';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function NavBar() {
   const [loginStatus, setLoginStatus] = useState();
@@ -14,6 +14,7 @@ function NavBar() {
     sessionStorage.setItem('loginStatus', JSON.stringify(false));
     sessionStorage.removeItem('userId');
     sessionStorage.removeItem('sessionToken');
+    sessionStorage.removeItem('authToken');
     setLoginStatus(false);
     navigate('/', {
       replace: true,

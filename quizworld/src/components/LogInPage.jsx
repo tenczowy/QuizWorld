@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import NavBar from './NavBar';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function LoginPage({ loggedIn }) {
   const [loginRegisterToggle, setLoginRegisterToggle] = useState(true);
@@ -28,6 +28,7 @@ function LoginPage({ loggedIn }) {
       if (loginStatus.data.status) {
         sessionStorage.setItem('loginStatus', loginStatus.data.status);
         sessionStorage.setItem('userId', loginStatus.data.userId);
+        sessionStorage.setItem('authToken', loginStatus.data.authToken);
 
         navigate('/', {
           replace: true,

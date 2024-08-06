@@ -4,6 +4,7 @@ import pg from 'pg';
 import cors from 'cors';
 import bcrypt from 'bcrypt';
 import 'dotenv/config';
+import jwt from 'jsonwebtoken';
 
 const app = new express();
 const saltRounds = parseInt(process.env.SALT_ROUNDS);
@@ -19,6 +20,13 @@ const db = new pg.Client({
   port: process.env.PORT,
 });
 db.connect();
+
+function generateToken(userId) {
+  const payload = { id: userId };
+  const secretKey = 'secret';
+  const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
+  return token;
+}
 
 app.get('/', (req, res) => {
   res.send('Hello');
@@ -126,6 +134,7 @@ app.post('/login', async (req, res) => {
               status: true,
               result: 'Logged in successfully!',
               userId: user.id,
+              authToken: generateToken(user.id),
             });
           } else {
             res.status(200).json({
@@ -147,15 +156,19 @@ app.post('/login', async (req, res) => {
   }
 });
 
-app.post('/addQuestion', async (req, res) => {
-  const formData = req.body.params.formData;
+app.post('/addQuestion', verifyToken, async (req, res) => {
+  const formData = req.body.formData;
   const { answer1, answer2, answer3, answer4 } = formData;
   const answers = { answer1, answer2, answer3, answer4 };
-  const userId = req.body.params.userId;
+  const userId = req.body.userId;
 
   //delete this later
   //'INSERT INTO userprofile (username, password) VALUES ($1, $2)',
   //delete from answer where question_id = 95
+
+  if (req.user.id !== parseInt(userId)) {
+    return res.status(400).send('Invalid user ID');
+  }
 
   try {
     //TODO
@@ -195,3 +208,23 @@ app.post('/addQuestion', async (req, res) => {
 app.listen(4000, () => {
   console.log(`Application running on port 4000.`);
 });
+
+//VERIFY TOKEN MIDDLEWARE
+
+function verifyToken(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).send('Access Denied');
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  try {
+    const verified = jwt.verify(token, 'secret');
+    req.user = verified;
+    next();
+  } catch (err) {
+    console.log(err);
+    res.status(400).send('Invalid Token');
+  }
+}
