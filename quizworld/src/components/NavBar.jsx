@@ -12,6 +12,8 @@ function NavBar() {
 
   function handleLogOut() {
     sessionStorage.setItem('loginStatus', JSON.stringify(false));
+    sessionStorage.removeItem('userId');
+    sessionStorage.removeItem('sessionToken');
     setLoginStatus(false);
     navigate('/', {
       replace: true,

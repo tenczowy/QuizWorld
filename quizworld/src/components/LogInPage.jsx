@@ -27,6 +27,8 @@ function LoginPage({ loggedIn }) {
     if (loginStatus) {
       if (loginStatus.data.status) {
         sessionStorage.setItem('loginStatus', loginStatus.data.status);
+        sessionStorage.setItem('userId', loginStatus.data.userId);
+
         navigate('/', {
           replace: true,
           state: { loginStatus: loginStatus.data.status },

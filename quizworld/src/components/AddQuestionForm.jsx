@@ -2,8 +2,11 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../public/AddQuestionForm.css';
 import AutoExpandTextarea from './AutoExpendTextArea';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 function AddQuestionForm() {
+  const navigate = useNavigate();
+  const [refreshKey, setRefreshKey] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [allCategories, setAllCategories] = useState([]);
   const [formValues, setFormValues] = useState({
@@ -34,7 +37,7 @@ function AddQuestionForm() {
     if (allCategories.length > 0) {
       setFormValues((prevValues) => ({
         ...prevValues,
-        category: allCategories[0].name,
+        category: String(allCategories[0].id),
       }));
     }
   }, [allCategories]);
@@ -53,36 +56,42 @@ function AddQuestionForm() {
   };
 
   const handleSubmit = async (event) => {
+    const userId = sessionStorage.getItem('userId');
     event.preventDefault();
     if (validateForm(formValues) === false) {
       alert('All fields are required!');
-      return;
+    } else {
+      try {
+        const res = await axios.post('http://localhost:4000/addQuestion', {
+          params: {
+            formData: formValues,
+            userId: userId,
+          },
+        });
+        alert(res.data.result);
+        setRefreshKey((oldKey) => oldKey + 1);
+      } catch {
+        console.log('Error during sending submit request');
+      } finally {
+        setIsLoading(false);
+      }
     }
-    try {
-      const res = await axios.post('http://localhost:4000/addQuestion', {
-        params: {
-          formData: formValues,
-        },
-      });
-    } catch {
-      console.log('Error during sending submit request');
-    } finally {
-      setIsLoading(false);
-    }
-
-    console.log('Form values:', formValues);
   };
 
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <form onSubmit={handleSubmit} className="add-question-form">
+    <form
+      onSubmit={handleSubmit}
+      className="add-question-form"
+      key={refreshKey}
+    >
       <div className="form-group-addQuestion">
         <label htmlFor="category">Choose Category: </label>
         <select name="category" id="category" onChange={handleSelect} required>
           {allCategories.map((category) => {
             return (
-              <option value={category.name} key={category.id}>
+              <option value={category.id} key={category.id}>
                 {category.name}
               </option>
             );

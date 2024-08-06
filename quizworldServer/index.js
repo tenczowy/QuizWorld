@@ -6,7 +6,7 @@ import bcrypt from 'bcrypt';
 import 'dotenv/config';
 
 const app = new express();
-const saltRounds = process.env.SALT_ROUNDS;
+const saltRounds = parseInt(process.env.SALT_ROUNDS);
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -41,6 +41,7 @@ app.get('/getQuestions', async (req, res) => {
       `
       SELECT id, question from question 
     WHERE cat_id = $1
+    AND accepted = true
     ORDER BY RANDOM ()
     LIMIT 5;
       `,
@@ -60,7 +61,6 @@ app.get('/getAnswers', async (req, res) => {
       `SELECT * FROM answer where question_id=$1 ORDER BY RANDOM ()`,
       [numericId]
     );
-    console.log(answers.rows);
     res.json(answers.rows);
   } catch (err) {
     console.error(err);
@@ -89,7 +89,7 @@ app.post('/register', async (req, res) => {
           console.log('Error hashing password: ' + err);
         }
         const result = await db.query(
-          'INSERT INTO userProfile (username, password) VALUES ($1, $2)',
+          'INSERT INTO userprofile (username, password) VALUES ($1, $2)',
           [username, hash]
         );
       });
@@ -125,6 +125,7 @@ app.post('/login', async (req, res) => {
             res.status(200).json({
               status: true,
               result: 'Logged in successfully!',
+              userId: user.id,
             });
           } else {
             res.status(200).json({
@@ -147,16 +148,48 @@ app.post('/login', async (req, res) => {
 });
 
 app.post('/addQuestion', async (req, res) => {
-  const data = req.body.params.formData;
-  const category = data.category;
-  const question = data.question;
-  const answer1 = data.answer1;
-  const answer2 = data.answer2;
-  const answer3 = data.answer3;
-  const answer4 = data.answer4;
-  const correct = data.correct;
+  const formData = req.body.params.formData;
+  const { answer1, answer2, answer3, answer4 } = formData;
+  const answers = { answer1, answer2, answer3, answer4 };
+  const userId = req.body.params.userId;
 
-  console.log(answer2);
+  //delete this later
+  //'INSERT INTO userprofile (username, password) VALUES ($1, $2)',
+  //delete from answer where question_id = 95
+
+  try {
+    //TODO
+    //Add answers only when adding questions was successull
+    const resultAddingQuestion = await db.query(
+      `INSERT INTO question (question, cat_id, submittedby) VALUES ($1, $2, $3) RETURNING id`, //submittedby containes user id
+      [formData.question, formData.category, userId]
+    );
+
+    const insertedId = resultAddingQuestion.rows[0].id;
+
+    let index = 1;
+    for (const [key, answer] of Object.entries(answers)) {
+      await db.query(
+        'INSERT INTO answer (answer, correct, question_id) VALUES ($1, $2, $3)',
+        [answer, index === parseInt(formData.correct), insertedId]
+      );
+      index++;
+    }
+
+    //response on success
+    res.status(200).json({
+      status: true,
+      result: 'Question was added successfully, will be reviewed shortly!',
+    });
+    console.log('Added successfully');
+  } catch (err) {
+    //response on failure
+    res.status(400).json({
+      status: true,
+      result: 'Something went wrong. Try again!',
+    });
+    console.log('ERROR ADDING QUESTION AND ANSWERS' + err);
+  }
 });
 
 app.listen(4000, () => {
