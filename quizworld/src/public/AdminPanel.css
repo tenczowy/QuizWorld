@@ -1,0 +1,20 @@
+.adminPanelContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+}
+
+.contentContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 6rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn {
+  font-family: inherit;
+  color: #d4b873;
+}

@@ -101,19 +101,19 @@ function App() {
   }
 
   function handleNextQuestion(questionState) {
+    setUserAnswers((prev) => [...prev, questionState]);
+    setUserScore((prev) => {
+      if (questionState.isCorrect) {
+        return prev + 1;
+      } else {
+        return prev;
+      }
+    });
+
     if (currentQuestion === questions.length - 1) {
       setIsFinished(true);
       sessionStorage.setItem('isFinished', true);
-      setUserAnswers((prev) => [...prev, questionState]);
     } else {
-      setUserAnswers((prev) => [...prev, questionState]);
-      setUserScore((prev) => {
-        if (questionState.isCorrect) {
-          return prev + 1;
-        } else {
-          return prev;
-        }
-      });
       setCurrentQuestion(currentQuestion + 1);
     }
   }

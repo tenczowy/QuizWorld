@@ -1,15 +1,13 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 
-//TODO verifie user role on server side and then perform validation
-
 function PrivateRoute({ element }) {
-  const loginStatus =
-    JSON.parse(sessionStorage.getItem('loginStatus')) || false;
+  const userRole = sessionStorage.getItem('userRole') || false;
 
-  if (loginStatus) {
+  if (userRole === 'admin') {
     return element;
   } else {
+    alert('Access Denied!');
     return <Navigate to="/logIn" replace />;
   }
 }

@@ -76,6 +76,7 @@ function AddQuestionForm() {
         alert(res.data.result);
         setRefreshKey((oldKey) => oldKey + 1);
       } catch {
+        //TODO handle situation when jwt token expires
         console.log('Error during sending submit request');
       } finally {
         setIsLoading(false);

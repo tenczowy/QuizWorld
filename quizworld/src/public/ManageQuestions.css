@@ -1,0 +1,89 @@
+.manageQuestionsContainer {
+  width: 100%;
+  height: 100vh;
+}
+
+.manageQuestionsContent {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  column-gap: 0.5rem;
+  margin-top: 5rem;
+}
+
+.questionToVerifyCard {
+  box-sizing: border-box;
+  min-width: 0;
+  width: 80%;
+  max-width: 300px;
+  color: #d4b873;
+  padding: 1rem;
+  margin: 1rem;
+  border-radius: 0.2rem;
+  background: linear-gradient(to bottom, #3a3a3a, #1c1c1c);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 12px 20px rgba(0, 0, 0, 0.5);
+  cursor: default;
+}
+
+.questionToVerifyCard h1 {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #d4b873;
+}
+
+.questionToVerifyCard h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px dotted #d4b873;
+}
+
+.answersList {
+  font-size: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.buttons-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.buttons-container button {
+  flex: 1;
+  margin: 0;
+  font-family: inherit;
+  font-size: 1.3em;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  border: 2px solid #d4b873;
+  outline: none;
+  padding: 10px;
+  width: auto;
+  transition: all ease-in 0.2s;
+  cursor: pointer;
+}
+
+.btn-accpet {
+  background-color: #38b000;
+}
+
+.btn-accpet:hover,
+.btn-accpet:focus {
+  background-color: #206400;
+}
+
+.btn-delete {
+  background-color: #d00000;
+}
+
+.btn-delete:hover,
+.btn-delete:focus {
+  background-color: #9c0000;
+}

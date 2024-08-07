@@ -8,6 +8,10 @@ import App from './App';
 import LoginPage from './LogInPage';
 import AddQuestion from './AddQuestion';
 import PrivateRoute from './PrivateRoute';
+import AdminPanel from './AdminPanel';
+import PrivateRouteAdmin from './PrivateRouteAdmin';
+import ManageQuestions from './ManageQuestions';
+import ManageUsers from './ManageUsers';
 
 const AppRouter = createBrowserRouter([
   {
@@ -23,6 +27,18 @@ const AppRouter = createBrowserRouter([
   {
     path: '/addQuestion',
     element: <PrivateRoute element={<AddQuestion />} />,
+  },
+  {
+    path: '/adminPanel',
+    element: <PrivateRouteAdmin element={<AdminPanel />} />,
+  },
+  {
+    path: '/manageUsers',
+    element: <PrivateRouteAdmin element={<ManageUsers />} />,
+  },
+  {
+    path: '/manageQuestions',
+    element: <PrivateRouteAdmin element={<ManageQuestions />} />,
   },
   {
     path: '*', // Wildcard route to catch all undefined paths

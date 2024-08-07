@@ -29,6 +29,7 @@ function LoginPage({ loggedIn }) {
         sessionStorage.setItem('loginStatus', loginStatus.data.status);
         sessionStorage.setItem('userId', loginStatus.data.userId);
         sessionStorage.setItem('authToken', loginStatus.data.authToken);
+        sessionStorage.setItem('userRole', loginStatus.data.userRole);
 
         navigate('/', {
           replace: true,

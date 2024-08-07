@@ -134,6 +134,7 @@ app.post('/login', async (req, res) => {
               status: true,
               result: 'Logged in successfully!',
               userId: user.id,
+              userRole: user.role,
               authToken: generateToken(user.id),
             });
           } else {
@@ -202,6 +203,21 @@ app.post('/addQuestion', verifyToken, async (req, res) => {
       result: 'Something went wrong. Try again!',
     });
     console.log('ERROR ADDING QUESTION AND ANSWERS' + err);
+  }
+});
+
+app.get('/questionsToVerify', async (req, res) => {
+  try {
+    const result = await db.query(
+      'SELECT question.id, question.question, question.cat_id, category.name AS categoryName, question.accepted, question.submittedby FROM question JOIN category ON question.cat_id = category.id WHERE accepted = false'
+    );
+
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.log('Error getting not accepted questions.' + err);
+    res.status(400).json({
+      result: "Couldn't get questions to verify",
+    });
   }
 });
 
