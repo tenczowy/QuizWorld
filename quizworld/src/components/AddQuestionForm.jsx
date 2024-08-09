@@ -155,6 +155,10 @@ function AddQuestionForm() {
         </select>
       </div>
       <div className="form-group-addQuestion, form-btns-container">
+        <p>
+          Question first will have to go through verification process before it
+          will be added to the quiz.
+        </p>
         <button>Submit</button>
       </div>
     </form>

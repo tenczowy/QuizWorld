@@ -7,11 +7,17 @@ import QuestionsToVerifyCard from './QuestionToVerifyCard';
 function ManageQuestions() {
   const [isLoading, setIsLoading] = useState(true);
   const [questionsToVerify, setQuestionsToVerify] = useState([]);
+  const authToken = sessionStorage.getItem('authToken');
   useEffect(() => {
     async function fetchData() {
       try {
         const result = await axios.get(
-          'http://localhost:4000/questionsToVerify'
+          'http://localhost:4000/questionsToVerify',
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
         );
         setIsLoading(false);
         setQuestionsToVerify(result.data);
@@ -21,7 +27,13 @@ function ManageQuestions() {
     }
 
     fetchData();
-  }, []);
+  }, [authToken]);
+
+  function handleAction(questionId, message) {
+    setQuestionsToVerify((prevQuestions) =>
+      prevQuestions.filter((question) => question.id !== questionId)
+    );
+  }
 
   if (isLoading) return <h1>Loading...</h1>;
 
@@ -35,6 +47,7 @@ function ManageQuestions() {
             questionId={question.id}
             categoryName={question.categoryname}
             questionText={question.question}
+            onAction={handleAction}
           />
         ))}
       </div>

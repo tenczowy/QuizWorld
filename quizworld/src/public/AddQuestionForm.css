@@ -85,3 +85,8 @@
   outline: none;
   border-color: #d4b873;
 }
+
+p {
+  color: #96a737;
+  margin-right: 1rem;
+}

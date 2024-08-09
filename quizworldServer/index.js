@@ -206,7 +206,7 @@ app.post('/addQuestion', verifyToken, async (req, res) => {
   }
 });
 
-app.get('/questionsToVerify', async (req, res) => {
+app.get('/questionsToVerify', verifyToken, async (req, res) => {
   try {
     const result = await db.query(
       'SELECT question.id, question.question, question.cat_id, category.name AS categoryName, question.accepted, question.submittedby FROM question JOIN category ON question.cat_id = category.id WHERE accepted = false'
@@ -217,6 +217,61 @@ app.get('/questionsToVerify', async (req, res) => {
     console.log('Error getting not accepted questions.' + err);
     res.status(400).json({
       result: "Couldn't get questions to verify",
+    });
+  }
+});
+
+app.delete('/deleteQuestion/:questionId', verifyToken, async (req, res) => {
+  const questionId = req.params.questionId;
+
+  try {
+    const result = await db.query('DELETE FROM question WHERE id=$1', [
+      questionId,
+    ]);
+    res.status(200).json({
+      result: 'Question Deleted successfully',
+    });
+  } catch (err) {
+    console.log('Error during deleting question.');
+    res.status(400).json({
+      result: 'Something went wrong while trying to delete question. //SERVER',
+    });
+  }
+});
+
+app.put('/acceptQuestion/:questionId', verifyToken, async (req, res) => {
+  const questionId = req.params.questionId;
+  try {
+    const result = await db.query(
+      'UPDATE question SET accepted = true WHERE id=$1',
+      [questionId]
+    );
+    res.status(200).json({
+      result: 'Question Accepted Succesfully',
+    });
+  } catch (err) {
+    console.log('Error accepting question //SERVER: ' + err);
+    res.status(400).json({
+      result: 'Error accepting question //Server',
+    });
+  }
+});
+
+app.get('/verifyRole/:userId', verifyToken, async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const result = await db.query('SELECT role FROM userprofile where id=$1', [
+      userId,
+    ]);
+    const userRole = result.rows[0];
+
+    res.status(200).json({
+      userRole: userRole,
+    });
+  } catch (err) {
+    console.log('error getting user role //server: ', err);
+    res.status(400).json({
+      result: 'Failed to get user role',
     });
   }
 });

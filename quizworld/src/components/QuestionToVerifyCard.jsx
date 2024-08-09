@@ -2,9 +2,15 @@ import React, { useState, useEffect } from 'react';
 import '../public/ManageQuestions.css';
 import axios from 'axios';
 
-function QuestionsToVerifyCard({ questionId, categoryName, questionText }) {
+function QuestionsToVerifyCard({
+  questionId,
+  categoryName,
+  questionText,
+  onAction,
+}) {
   const [isLoading, setIsLoading] = useState(true);
   const [answersToCurrentQuestion, setAnswers] = useState([]);
+  const authToken = sessionStorage.getItem('authToken');
 
   useEffect(() => {
     const fetchAnswers = async () => {
@@ -13,6 +19,7 @@ function QuestionsToVerifyCard({ questionId, categoryName, questionText }) {
           params: { questionId },
         });
         setAnswers(response.data);
+        setIsLoading(false);
       } catch (err) {
         console.log('ERROR FETCHING ANSWERS:', err);
       } finally {
@@ -20,13 +27,62 @@ function QuestionsToVerifyCard({ questionId, categoryName, questionText }) {
       }
     };
     fetchAnswers();
-  }, []);
+  }, [questionId]);
 
   function handleAccept() {
-    console.log(questionId);
+    const isConfirmed = window.confirm(
+      'Are you sure you want to accept this question?'
+    );
+
+    if (isConfirmed) {
+      const sendAcceptRequest = async () => {
+        try {
+          const response = await axios.put(
+            `http://localhost:4000/acceptQuestion/${questionId}`,
+            null,
+            {
+              headers: {
+                Authorization: `Bearer ${authToken}`,
+              },
+            }
+          );
+          setIsLoading(false);
+          const message = response.data.result;
+          onAction(questionId, message);
+        } catch (err) {
+          console.log('Error during sending accept request: ', err);
+        }
+      };
+      sendAcceptRequest();
+    }
   }
 
-  function handleDelete() {}
+  function handleDelete() {
+    const isConfirmed = window.confirm(
+      'Are you sure you want to delete this question?'
+    );
+
+    if (isConfirmed) {
+      const sendDeleteRequest = async () => {
+        try {
+          const response = await axios.delete(
+            `http://localhost:4000/deleteQuestion/${questionId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${authToken}`,
+              },
+            }
+          );
+          setIsLoading(false);
+          const message = response.data.result;
+          onAction(questionId, message);
+        } catch (err) {
+          console.log('Error during sending delete request: ', err);
+        }
+      };
+      sendDeleteRequest();
+    }
+  }
 
   if (isLoading) return <h1>Loading...</h1>;
 

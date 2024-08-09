@@ -5,6 +5,7 @@ import RegisterForm from './RegisterForm';
 import { useNavigate } from 'react-router-dom';
 
 function LoginPage({ loggedIn }) {
+  sessionStorage.clear();
   const [loginRegisterToggle, setLoginRegisterToggle] = useState(true);
   const [registerResult, setRegisterResult] = useState();
   const [loginStatus, setLoginStatus] = useState();

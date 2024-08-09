@@ -6,6 +6,7 @@ function NavBar() {
   const [loginStatus, setLoginStatus] = useState();
   const [userRole, setUserRole] = useState();
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     setLoginStatus(JSON.parse(sessionStorage.getItem('loginStatus')) || false);
@@ -13,11 +14,7 @@ function NavBar() {
   }, []);
 
   function handleLogOut() {
-    sessionStorage.setItem('loginStatus', JSON.stringify(false));
-    sessionStorage.removeItem('userId');
-    sessionStorage.removeItem('sessionToken');
-    sessionStorage.removeItem('authToken');
-    sessionStorage.removeItem('userRole');
+    sessionStorage.clear();
     setLoginStatus(false);
     navigate('/', {
       replace: true,
@@ -47,9 +44,13 @@ function NavBar() {
     });
   }
 
+  function toggleMenu() {
+    setIsOpen((open) => !open);
+  }
+
   return (
     <nav className="primary-nav">
-      <div className="logging-btns-container">
+      <div className="logging-btns-container desktop-nav">
         {userRole === 'admin' ? (
           <button className="logout-btn" onClick={navigateAdminPanel}>
             Admin Panel
@@ -71,6 +72,42 @@ function NavBar() {
           </button>
         )}
       </div>
+      {isOpen ? (
+        <div
+          className="logging-btns-container mobile-nav"
+          style={{ textAlign: 'center' }}
+          onClick={toggleMenu}
+        >
+          {userRole === 'admin' ? (
+            <button className="logout-btn" onClick={navigateAdminPanel}>
+              Admin Panel
+            </button>
+          ) : null}
+          <button className="logout-btn" onClick={navigateHome}>
+            Home
+          </button>
+          {loginStatus ? (
+            <button className="logout-btn" onClick={navigateQuestions}>
+              Add Question
+            </button>
+          ) : null}
+          {!loginStatus ? (
+            <Link to="/logIn">Log In</Link>
+          ) : (
+            <button className="logout-btn" onClick={handleLogOut}>
+              Log Out
+            </button>
+          )}
+        </div>
+      ) : null}
+
+      <p className="mobile-nav-trigger" onClick={toggleMenu}>
+        {isOpen ? (
+          <ion-icon className="menu-icon" name="close-outline"></ion-icon>
+        ) : (
+          <ion-icon className="menu-icon" name="menu-outline"></ion-icon>
+        )}
+      </p>
     </nav>
   );
 }
