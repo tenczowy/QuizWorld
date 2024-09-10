@@ -6,11 +6,6 @@ A full-stack quiz application built with **Node.js**, **React**, **HTML**, **CSS
 
 - [Features](#features)
 - [Tech Stack](#tech-stack)
-- [Setup Instructions](#setup-instructions)
-- [Database Schema](#database-schema)
-- [Screenshots](#screenshots)
-- [Usage](#usage)
-- [License](#license)
 
 ## Features
 
